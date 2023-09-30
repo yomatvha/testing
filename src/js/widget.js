@@ -1,17 +1,16 @@
-import { isValidCard } from "./validators";
-import { getCardType } from "./validators";
+import { isValidCard, getCardType } from './validators';
 
-export class CardFormWidget {
+export default class CardFormWidget {
   constructor(parentEl) {
     this.parentEl = parentEl;
     this.cards = [
-      "mir",
-      "visa",
-      "mastercard",
-      "amex",
-      "discover",
-      "jcb",
-      "diners",
+      'mir',
+      'visa',
+      'mastercard',
+      'amex',
+      'discover',
+      'jcb',
+      'diners',
     ];
 
     this.onSubmit = this.onSubmit.bind(this);
@@ -28,19 +27,19 @@ export class CardFormWidget {
   }
 
   static get boardSelector() {
-    return ".board";
+    return '.board';
   }
 
   static get submitSelector() {
-    return ".submit";
+    return '.submit';
   }
 
   static get inputSelector() {
-    return ".input";
+    return '.input';
   }
 
   static get selector() {
-    return ".card-form-widget";
+    return '.card-form-widget';
   }
 
   bindToDOM() {
@@ -49,8 +48,8 @@ export class CardFormWidget {
     this.boardEl = this.parentEl.querySelector(CardFormWidget.boardSelector);
 
     for (let i = 0; i < this.cards.length; i += 1) {
-      const cellEl = document.createElement("div");
-      cellEl.classList.add("cell");
+      const cellEl = document.createElement('div');
+      cellEl.classList.add('cell');
       this.boardEl.appendChild(cellEl);
     }
 
@@ -60,7 +59,7 @@ export class CardFormWidget {
 
     this.redrawPositions();
 
-    this.element.addEventListener("submit", this.onSubmit);
+    this.element.addEventListener('submit', this.onSubmit);
   }
 
   redrawPositions() {
@@ -68,14 +67,13 @@ export class CardFormWidget {
     const isValid = isValidCard(this.input.value);
 
     for (let i = 0; i < this.cards.length; i += 1) {
-      console.log(this.boardEl.children[i]);
-      this.boardEl.children[i].innerHTML = "";
+      this.boardEl.children[i].innerHTML = '';
       const cellEl = this.boardEl.children[i];
-      const charEl = document.createElement("div");
+      const charEl = document.createElement('div');
       if (this.cards[i] === cardType && isValid === true) {
-        charEl.classList.add("card", this.cards[i]);
+        charEl.classList.add('card', this.cards[i]);
       } else {
-        charEl.classList.add("card", this.cards[i] + "-no");
+        charEl.classList.add('card', `${this.cards[i]}-no`);
       }
       cellEl.appendChild(charEl);
     }
@@ -84,14 +82,14 @@ export class CardFormWidget {
   onSubmit(e) {
     e.preventDefault();
 
-    const value = this.input.value;
+    const { value } = this.input;
 
     if (isValidCard(value)) {
-      this.input.classList.add("valid");
-      this.input.classList.remove("invalid");
+      this.input.classList.add('valid');
+      this.input.classList.remove('invalid');
     } else {
-      this.input.classList.add("invalid");
-      this.input.classList.remove("valid");
+      this.input.classList.add('invalid');
+      this.input.classList.remove('valid');
     }
 
     this.redrawPositions();
