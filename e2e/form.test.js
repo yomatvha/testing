@@ -1,28 +1,47 @@
-import puppeteer from 'puppeteer';
+import puppetteer from 'puppeteer';
+import { fork } from 'child_process';
 
-describe('Card Form', () => {
-  let browser;
-  let page;
+jest.setTimeout(30000); // default puppeteer timeout
 
-  beforeEach(async () => {
-    browser = await puppeteer.launch({
-      headless: false,
-      slowMo: 100,
-      devtools: true,
+describe('Credit Card Validator form', () => {
+  let browser = null;
+  let page = null;
+  let server = null;
+  const baseUrl = 'http://localhost:9000';
+
+  beforeAll(async () => {
+    server = fork(`${__dirname}/e2e.server.js`);
+    await new Promise((resolve, reject) => {
+      server.on('error', reject);
+      server.on('message', (message) => {
+        if (message === 'ok') {
+          resolve();
+        }
+      });
     });
 
+    browser = await puppetteer.launch({
+      // headless: false, // show gui
+      // slowMo: 250,
+      // devtools: true, // show devTools
+    });
     page = await browser.newPage();
   });
 
+  afterAll(async () => {
+    await browser.close();
+    server.kill();
+  });
+
   test('Form should render on page start', async () => {
-    await page.goto('http://localhost:9000');
+    await page.goto(baseUrl);
 
     await page.waitFor('.card-form-widget');
   });
 
   test('Form input should add .valid class if card number is valid', async () => {
     jest.setTimeout(20000);
-    await page.goto('http://localhost:9000');
+    await page.goto(baseUrl);
 
     await page.waitFor('.card-form-widget');
 
@@ -38,7 +57,7 @@ describe('Card Form', () => {
 
   test('Form input should add .invalid class if card number is invalid', async () => {
     jest.setTimeout(20000);
-    await page.goto('http://localhost:9000');
+    await page.goto(baseUrl);
 
     await page.waitFor('.card-form-widget');
 
@@ -52,7 +71,4 @@ describe('Card Form', () => {
     await page.waitFor('.card-form-widget .input.invalid');
   });
 
-  afterEach(async () => {
-    await browser.close();
-  });
 });
