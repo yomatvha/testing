@@ -70,5 +70,4 @@ describe('Credit Card Validator form', () => {
 
     await page.waitFor('.card-form-widget .input.invalid');
   });
-
 });
