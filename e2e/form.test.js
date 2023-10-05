@@ -36,14 +36,14 @@ describe('Credit Card Validator form', () => {
   test('Form should render on page start', async () => {
     await page.goto(baseUrl);
 
-    await page.waitFor('.card-form-widget');
+    await page.waitForSelector('.card-form-widget');
   });
 
   test('Form input should add .valid class if card number is valid', async () => {
     jest.setTimeout(20000);
     await page.goto(baseUrl);
 
-    await page.waitFor('.card-form-widget');
+    await page.waitForSelector('.card-form-widget');
 
     const form = await page.$('.card-form-widget');
     const input = await form.$('.input');
@@ -52,14 +52,14 @@ describe('Credit Card Validator form', () => {
     await input.type('2200150223920999');
     await submit.click();
 
-    await page.waitFor('.card-form-widget .input.valid');
+    await page.waitForSelector('.card-form-widget .input.valid');
   });
 
   test('Form input should add .invalid class if card number is invalid', async () => {
     jest.setTimeout(20000);
     await page.goto(baseUrl);
 
-    await page.waitFor('.card-form-widget');
+    await page.waitForSelector('.card-form-widget');
 
     const form = await page.$('.card-form-widget');
     const input = await form.$('.input');
@@ -68,6 +68,6 @@ describe('Credit Card Validator form', () => {
     await input.type('2200150223920998');
     await submit.click();
 
-    await page.waitFor('.card-form-widget .input.invalid');
+    await page.waitForSelector('.card-form-widget .input.invalid');
   });
 });
